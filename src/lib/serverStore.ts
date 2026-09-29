@@ -82,12 +82,12 @@ export async function getAllAccounts(): Promise<TradingAccount[]> {
     list = global.__GLOBAL_ACCOUNTS__ || defaultAccounts;
   }
 
-  // Single MT4 account mode: prioritaskan akun MT4 riil (10474893) dan sembunyikan dummy akun
-  const realMt4 = list.find((a) => a.account_number === 10474893) || list.find((a) => a.account_number !== 12345678 && a.account_number !== 88992211);
-  if (realMt4) {
-    return [realMt4];
+  // Hanya izinkan akun riil MT4 10474893
+  const targetAcc = list.find((a) => a.account_number === 10474893);
+  if (targetAcc) {
+    return [targetAcc];
   }
-  return list;
+  return [initialAccount];
 }
 
 export async function getAccounts(): Promise<TradingAccount> {
@@ -96,14 +96,12 @@ export async function getAccounts(): Promise<TradingAccount> {
 }
 
 export async function getTrades(): Promise<Trade[]> {
-  let tradesList: Trade[] = [];
-
   // 1. Try Direct PostgreSQL
   if (pool) {
     try {
       const pgTrades = await getTradesFromPostgres();
-      if (pgTrades && pgTrades.length > 0) {
-        tradesList = pgTrades;
+      if (pgTrades !== null) {
+        return pgTrades.filter((t) => t.account_number === 10474893);
       }
     } catch {
       // Ignore and fallback
@@ -111,15 +109,16 @@ export async function getTrades(): Promise<Trade[]> {
   }
 
   // 2. Try Supabase REST
-  if (tradesList.length === 0 && isSupabaseConfigured && supabase) {
+  if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
         .from('trades')
         .select('*')
+        .eq('account_number', 10474893)
         .order('open_time', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        tradesList = data.map((d) => ({
+      if (!error && data !== null) {
+        return data.map((d) => ({
           id: d.id,
           ticket: Number(d.ticket),
           account_number: Number(d.account_number),
@@ -155,17 +154,10 @@ export async function getTrades(): Promise<Trade[]> {
     }
   }
 
-  if (tradesList.length === 0) {
-    tradesList = global.__GLOBAL_TRADES__ || initialTrades;
-  }
-
-  // Single MT4 account mode: filter transaksi hanya untuk akun MT4 riil (10474893)
-  const mt4Trades = tradesList.filter((t) => t.account_number === 10474893);
-  if (mt4Trades.length > 0) {
-    return mt4Trades;
-  }
-  return tradesList;
+  const memoryTrades = global.__GLOBAL_TRADES__ || [];
+  return memoryTrades.filter((t) => t.account_number === 10474893);
 }
+
 
 export async function syncFromMetaTrader(payload: SyncPayload, apiKey: string) {
   global.__LAST_PING_TIME__ = Date.now();

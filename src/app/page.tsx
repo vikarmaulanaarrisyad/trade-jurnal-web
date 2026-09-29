@@ -58,7 +58,7 @@ export default function DashboardPage() {
             setSelectedAccountNumber(json.accounts[0].account_number);
           }
         }
-        if (json.trades && json.trades.length > 0) setTrades(json.trades);
+        if (json.trades && Array.isArray(json.trades)) setTrades(json.trades);
         if (json.meta) {
           setIsTerminalOnline(json.meta.isTerminalOnline);
           setIsSupabaseConnected(json.meta.isSupabaseConnected);
@@ -134,21 +134,19 @@ export default function DashboardPage() {
       const isWin = Math.random() > 0.3;
       const profit = isWin ? +(180 + Math.random() * 650).toFixed(2) : +(-90 - Math.random() * 250).toFixed(2);
 
-      // Randomly simulate MT4 or MT5
-      const isMT5Sim = Math.random() > 0.5;
       const simAccountNumber = initialAccount.account_number;
-      const simBroker = 'QuickPro MT4 Terminal';
+      const simBroker = 'PT QuickPro Berjangka Indonesia';
 
       const mockPayload = {
         account: {
           accountNumber: simAccountNumber,
-          platform: 'MT4',
+          platform: 'MT4' as const,
           broker: simBroker,
           currency: 'USD',
-          balance: (activeAccount?.balance || 10000) + profit,
-          equity: (activeAccount?.equity || 10000) + profit + 40,
+          balance: (activeAccount?.balance || 19.74) + profit,
+          equity: (activeAccount?.equity || 19.74) + profit,
           leverage: 500,
-          server: 'QuickPro-Live',
+          server: 'Live',
         },
         trades: [
           {
@@ -167,8 +165,8 @@ export default function DashboardPage() {
             swap: 0,
             netPnl: +(profit - 3.5).toFixed(2),
             magicNumber: 110294,
-            comment: `Live ${simPlatform} Auto-Sync`,
-            status: 'CLOSED',
+            comment: 'Live MT4 Auto-Sync',
+            status: 'CLOSED' as const,
           },
           ...trades.slice(0, 10).map((t) => ({
             ticket: t.ticket,
@@ -204,7 +202,7 @@ export default function DashboardPage() {
 
       if (res.ok) {
         await fetchData();
-        showNotification(`⚡ Trade baru [${simPlatform} #${simAccountNumber}] (${symbol} ${profit >= 0 ? '+$' + profit : '-$' + Math.abs(profit)}) otomatis tercatat di Supabase!`);
+        showNotification(`⚡ Trade baru [MT4 #${simAccountNumber}] (${symbol} ${profit >= 0 ? '+$' + profit : '-$' + Math.abs(profit)}) otomatis tercatat di Supabase!`);
       }
     } catch (err) {
       console.error('Simulation failed:', err);

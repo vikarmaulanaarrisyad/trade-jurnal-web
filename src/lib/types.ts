@@ -63,6 +63,7 @@ export interface SyncPayload {
     equity: number;
     leverage: number;
     server?: string;
+    serverName?: string;
   };
   trades: Array<{
     ticket: number;
