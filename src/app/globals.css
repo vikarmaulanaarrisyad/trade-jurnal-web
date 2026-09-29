@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #080B11;
+    --foreground: #F8FAFC;
+  }
+
+  body {
+    background-color: #080B11;
+    color: #F8FAFC;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
+  }
+}
+
+/* Luxury Trading Background with ambient glow */
+.trading-bg-glow {
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+    #080B11;
+}
+
+/* Glassmorphism Surface with Crisp Border */
+.glass-card {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(96, 165, 250, 0.35);
+  box-shadow: 0 12px 35px -8px rgba(37, 99, 235, 0.15), 0 0 1px 1px rgba(96, 165, 250, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Neon Glow Accents */
+.neon-profit-glow {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+}
+
+.neon-loss-glow {
+  box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.25);
+}
+
+.neon-blue-glow {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080B11;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Animated gradient text */
+.gradient-text-profit {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-gold {
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-blue {
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
