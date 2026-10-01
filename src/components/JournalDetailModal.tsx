@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   AlertTriangle,
   Layers,
-  Coins
+  Coins,
+  Share2
 } from 'lucide-react';
 
 interface JournalDetailModalProps {
@@ -25,6 +26,7 @@ interface JournalDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (ticket: number, updates: Partial<Trade>) => Promise<void>;
+  onShareTrade?: (trade: Trade) => void;
 }
 
 export const JournalDetailModal: React.FC<JournalDetailModalProps> = ({
@@ -32,6 +34,7 @@ export const JournalDetailModal: React.FC<JournalDetailModalProps> = ({
   isOpen,
   onClose,
   onSave,
+  onShareTrade,
 }) => {
   const [strategyTag, setStrategyTag] = useState('');
   const [session, setSession] = useState<'Asian' | 'London' | 'New York' | 'Overlap'>('London');
@@ -316,12 +319,28 @@ export const JournalDetailModal: React.FC<JournalDetailModalProps> = ({
 
         {/* Modal Footer */}
         <div className="p-5 sm:p-6 border-t border-white/[0.08] bg-[#0B0F19]/95 flex items-center justify-between sticky bottom-0 z-20">
-          <button
-            onClick={onClose}
-            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-colors"
-          >
-            Tutup
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            >
+              Tutup
+            </button>
+
+            {onShareTrade && (
+              <button
+                type="button"
+                onClick={() => {
+                  onShareTrade(trade);
+                }}
+                className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all shadow-sm active:scale-95"
+                title="Buka Generator Kartu Sosmed untuk Transaksi Ini"
+              >
+                <Share2 className="h-4 w-4 text-amber-400" />
+                <span>Kartu Sosmed</span>
+              </button>
+            )}
+          </div>
 
           <button
             onClick={handleSave}

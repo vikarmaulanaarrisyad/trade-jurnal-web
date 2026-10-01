@@ -14,7 +14,10 @@ import {
   Sparkles,
   X,
   CheckCircle,
-  Coins
+  Coins,
+  Share2,
+  Download,
+  FileSpreadsheet
 } from 'lucide-react';
 
 interface TradesTableProps {
@@ -22,6 +25,8 @@ interface TradesTableProps {
   onSelectTrade: (trade: Trade) => void;
   selectedDateFilter?: string | null;
   onClearDateFilter?: () => void;
+  onShareTrade?: (trade: Trade) => void;
+  onOpenExportReport?: () => void;
 }
 
 export const TradesTable: React.FC<TradesTableProps> = ({
@@ -29,6 +34,8 @@ export const TradesTable: React.FC<TradesTableProps> = ({
   onSelectTrade,
   selectedDateFilter,
   onClearDateFilter,
+  onShareTrade,
+  onOpenExportReport,
 }) => {
   const [tab, setTab] = useState<'ALL' | 'OPEN' | 'CLOSED' | 'WIN' | 'LOSS'>('ALL');
   const [search, setSearch] = useState('');
@@ -158,6 +165,18 @@ export const TradesTable: React.FC<TradesTableProps> = ({
               </button>
             )}
           </div>
+
+          {/* Export Report Action */}
+          {onOpenExportReport && (
+            <button
+              onClick={onOpenExportReport}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-950/80 hover:bg-slate-800 text-slate-200 border border-white/10 hover:border-emerald-500/40 hover:text-emerald-300 transition-all shadow-sm shrink-0"
+              title="Ekspor Laporan Transaksi ke PDF atau Excel"
+            >
+              <Download className="h-3.5 w-3.5 text-emerald-400" />
+              <span className="hidden sm:inline">Ekspor</span>
+            </button>
+          )}
         </div>
 
       </div>
@@ -357,18 +376,32 @@ export const TradesTable: React.FC<TradesTableProps> = ({
                       </div>
                     </td>
 
-                    {/* Edit Action Button */}
+                    {/* Action Buttons: Share Card & Edit */}
                     <td className="py-3.5 px-4 text-center">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSelectTrade(t);
-                        }}
-                        className="p-1.5 rounded-xl bg-slate-900 hover:bg-blue-600 hover:text-white text-slate-400 border border-white/10 group-hover:border-blue-500/40 transition-all shadow-sm"
-                        title="Tulis Evaluasi Jurnal"
-                      >
-                        <FileEdit className="h-4 w-4" />
-                      </button>
+                      <div className="flex items-center justify-center gap-1.5">
+                        {onShareTrade && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onShareTrade(t);
+                            }}
+                            className="p-1.5 rounded-xl bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-slate-400 border border-white/10 hover:border-amber-400 transition-all shadow-sm"
+                            title="Buat Kartu Share Sosmed (Telegram/IG)"
+                          >
+                            <Share2 className="h-4 w-4" />
+                          </button>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectTrade(t);
+                          }}
+                          className="p-1.5 rounded-xl bg-slate-900 hover:bg-blue-600 hover:text-white text-slate-400 border border-white/10 hover:border-blue-500 transition-all shadow-sm"
+                          title="Tulis Evaluasi Jurnal"
+                        >
+                          <FileEdit className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

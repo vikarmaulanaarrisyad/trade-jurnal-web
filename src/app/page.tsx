@@ -14,6 +14,8 @@ import { TradesTable } from '@/components/TradesTable';
 import { JournalDetailModal } from '@/components/JournalDetailModal';
 import { SetupGuideModal } from '@/components/SetupGuideModal';
 import { SupabaseConfigModal } from '@/components/SupabaseConfigModal';
+import { SocialTradeCardModal } from '@/components/SocialTradeCardModal';
+import { ExportReportModal } from '@/components/ExportReportModal';
 import { 
   Terminal, 
   CheckCircle2, 
@@ -39,6 +41,9 @@ export default function DashboardPage() {
   const [isJournalModalOpen, setIsJournalModalOpen] = useState(false);
   const [isSetupGuideOpen, setIsSetupGuideOpen] = useState(false);
   const [isSupabaseModalOpen, setIsSupabaseModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isSocialCardModalOpen, setIsSocialCardModalOpen] = useState(false);
+  const [selectedShareTrade, setSelectedShareTrade] = useState<Trade | null>(null);
 
   // Filter state
   const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
@@ -232,6 +237,7 @@ export default function DashboardPage() {
         onOpenSupabaseModal={() => setIsSupabaseModalOpen(true)}
         onSimulateTrade={handleSimulateTrade}
         isSimulating={isSimulating}
+        onOpenExportReport={() => setIsExportModalOpen(true)}
       />
 
       {/* Notification Toast */}
@@ -347,6 +353,11 @@ export default function DashboardPage() {
             onSelectTrade={handleSelectTrade}
             selectedDateFilter={selectedDateFilter}
             onClearDateFilter={() => setSelectedDateFilter(null)}
+            onShareTrade={(t) => {
+              setSelectedShareTrade(t);
+              setIsSocialCardModalOpen(true);
+            }}
+            onOpenExportReport={() => setIsExportModalOpen(true)}
           />
         </div>
 
@@ -374,6 +385,27 @@ export default function DashboardPage() {
         isOpen={isJournalModalOpen}
         onClose={() => setIsJournalModalOpen(false)}
         onSave={handleSaveJournal}
+        onShareTrade={(t) => {
+          setSelectedShareTrade(t);
+          setIsSocialCardModalOpen(true);
+        }}
+      />
+
+      <SocialTradeCardModal
+        trade={selectedShareTrade}
+        isOpen={isSocialCardModalOpen}
+        onClose={() => {
+          setIsSocialCardModalOpen(false);
+          setSelectedShareTrade(null);
+        }}
+      />
+
+      <ExportReportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        trades={activeTrades}
+        accounts={accounts}
+        selectedAccountNumber={selectedAccountNumber}
       />
 
       <SetupGuideModal

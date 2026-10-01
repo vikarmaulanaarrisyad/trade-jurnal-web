@@ -11,7 +11,8 @@ import {
   Zap,
   TrendingUp,
   ShieldCheck,
-  Award
+  Award,
+  Download
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -23,6 +24,7 @@ interface NavbarProps {
   onOpenSupabaseModal: () => void;
   onSimulateTrade: () => void;
   isSimulating: boolean;
+  onOpenExportReport?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -34,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSupabaseModal,
   onSimulateTrade,
   isSimulating,
+  onOpenExportReport,
 }) => {
   return (
     <header className="sticky top-0 z-30 border-b border-white/[0.08] bg-[#080B11]/85 backdrop-blur-2xl transition-all">
@@ -136,6 +139,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Radio className={`h-3.5 w-3.5 text-blue-400 ${isSimulating ? 'animate-spin' : ''}`} />
               <span className="hidden md:inline">Simulasi MT4</span>
             </button>
+
+            {/* Ekspor Laporan Button */}
+            {onOpenExportReport && (
+              <button
+                onClick={onOpenExportReport}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-white/10 hover:border-emerald-500/40 hover:text-emerald-300 transition-all shadow-sm active:scale-95"
+                title="Ekspor Laporan Transaksi ke PDF atau Excel"
+              >
+                <Download className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="hidden sm:inline">Ekspor Laporan</span>
+              </button>
+            )}
 
             {/* Connect EA Guide Modal Trigger */}
             <button
